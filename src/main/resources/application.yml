@@ -1,154 +1,16 @@
 spring:
-  shardingsphere:
-    mode:
-      type: Memory
-#   集群
-#      repository:
-#        type: # 持久化仓库类型
-#        props: # 持久化仓库所需属性
-#          foo_key: foo_value
-#          bar_key: bar_value
-#      overwrite: # 是否使用本地配置覆盖持久化配置
-    datasource:
-      names: w-ds0, w-ds1, r1-ds0, r1-ds1, r2-ds0, r2-ds1
-      w-ds0:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.47.133:3310/myshop_0?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&useSSL=false
-        username: root
-        password: '123456'
-        hikari:
-          minimum-idle: 5
-          idle-timeout: 600000
-          maximum-pool-size: 10
-          auto-commit: true
-          pool-name: MyHikariCP
-          max-lifetime: 1800000
-          connection-timeout: 30000
-          connection-test-query: SELECT 1
-      w-ds1:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.47.133:3310/myshop_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&useSSL=false
-        username: root
-        password: '123456'
-        hikari:
-          minimum-idle: 5
-          idle-timeout: 600000
-          maximum-pool-size: 10
-          auto-commit: true
-          pool-name: MyHikariCP
-          max-lifetime: 1800000
-          connection-timeout: 30000
-          connection-test-query: SELECT 1
-      r1-ds0:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.47.133:3311/myshop_0?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&useSSL=false
-        username: root
-        password: '123456'
-        hikari:
-          minimum-idle: 5
-          idle-timeout: 600000
-          maximum-pool-size: 10
-          auto-commit: true
-          pool-name: MyHikariCP
-          max-lifetime: 1800000
-          connection-timeout: 30000
-          connection-test-query: SELECT 1
-      r1-ds1:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.47.133:3311/myshop_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&useSSL=false
-        username: root
-        password: '123456'
-        hikari:
-          minimum-idle: 5
-          idle-timeout: 600000
-          maximum-pool-size: 10
-          auto-commit: true
-          pool-name: MyHikariCP
-          max-lifetime: 1800000
-          connection-timeout: 30000
-          connection-test-query: SELECT 1
-      r2-ds0:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.47.133:3312/myshop_0?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&useSSL=false
-        username: root
-        password: '123456'
-        hikari:
-          minimum-idle: 5
-          idle-timeout: 600000
-          maximum-pool-size: 10
-          auto-commit: true
-          pool-name: MyHikariCP
-          max-lifetime: 1800000
-          connection-timeout: 30000
-          connection-test-query: SELECT 1
-      r2-ds1:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://192.168.47.133:3312/myshop_1?useUnicode=true&characterEncoding=utf-8&serverTimezone=Hongkong&useSSL=false
-        username: root
-        password: '123456'
-        hikari:
-          minimum-idle: 5
-          idle-timeout: 600000
-          maximum-pool-size: 10
-          auto-commit: true
-          pool-name: MyHikariCP
-          max-lifetime: 1800000
-          connection-timeout: 30000
-          connection-test-query: SELECT 1
-
-    rules:
-      # 读写分离，
-      readwrite-splitting:
-        data-sources:
-          w-ds0:
-            props:
-              write-data-source-name: w-ds0
-              # 前后顺序与数据分片有关
-              read-data-source-names: r1-ds0, r2-ds0
-            type: Static
-          w-ds1:
-            props:
-              write-data-source-name: w-ds1
-              read-data-source-names: r1-ds1, r2-ds1
-            type: Static
-
-      # 数据分片 (分片策略 -> 算法处理结果)
-      sharding:
-        binding-tables:
-          - tb_order
-        # 数据库分片策略
-        default-database-strategy:
-          # 应用分片算法的处理结果
-          standard:
-            sharding-algorithm-name: database-inline
-            sharding-column: user_id
-        # 分片算法
-        sharding-algorithms:
-          # 数据库分片算法
-          database-inline:
-            props:
-              algorithm-expression: w-ds$->{user_id % 2}
-            type: INLINE
-          # tb_order 表分片算法
-          tb-order-inline:
-            props:
-              algorithm-expression: tb_order_$->{order_id % 2}
-            type: INLINE
-        tables:
-          tb_order:
-            # 库.表
-            actual-data-nodes: w-ds$->{0..1}.tb_order_$->{0..1}
-            # 应用分片算法的处理结果
-            table-strategy:
-              standard:
-                sharding-algorithm-name: tb-order-inline
-                sharding-column: order_id
-
-    props:
-      sql-show: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/myshop?serverTimezone=UTC&useSSL=false
+    username: root
+    password: root
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1

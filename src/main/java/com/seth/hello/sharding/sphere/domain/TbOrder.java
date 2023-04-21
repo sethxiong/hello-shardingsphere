@@ -15,6 +15,12 @@ public class TbOrder implements Serializable {
     public TbOrder() {
     }
 
+    public TbOrder(Long id, Long orderId, Long userId) {
+        this.id = id;
+        this.orderId = orderId;
+        this.userId = userId;
+    }
+
     public TbOrder(Long userId, Long orderId) {
         this.userId = userId;
         this.orderId = orderId;
